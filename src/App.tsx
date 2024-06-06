@@ -103,6 +103,7 @@ function App() {
   
 
   const collectGold = () => {
+    console.log(gold);
     try {
       let totalGold = 0;
       
