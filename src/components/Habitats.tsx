@@ -1,6 +1,6 @@
+import React from 'react';
 import { Habitat, Monster } from '../types'; 
 import '../css/Habitats.css';
-import React from 'react'; 
 
 interface HabitatsProps {
   habitats: Habitat[];
@@ -8,14 +8,15 @@ interface HabitatsProps {
   buildLegendaryHabitat: (
     habitats: Habitat[],
     gold: number,
-    setHabitats: React.Dispatch<React.SetStateAction<Habitat[]>>
+    setHabitats: React.Dispatch<React.SetStateAction<Habitat[]>>,
+    setGold: React.Dispatch<React.SetStateAction<number>>
   ) => void;
   gold: number;
-  setHabitats: React.Dispatch<React.SetStateAction<Habitat[]>>; 
+  setGold: React.Dispatch<React.SetStateAction<number>>; // Define setGold
+  setHabitats: React.Dispatch<React.SetStateAction<Habitat[]>>;
 }
 
-
-function Habitats({ habitats, upgradeHabitat, buildLegendaryHabitat, gold, setHabitats }: HabitatsProps) {
+function Habitats({ habitats, upgradeHabitat, buildLegendaryHabitat, gold, setHabitats, setGold }: HabitatsProps) {
   return (
     <div className="habitats">
       {habitats.map((habitat) => (
@@ -33,8 +34,8 @@ function Habitats({ habitats, upgradeHabitat, buildLegendaryHabitat, gold, setHa
             ))}
           </div>
           <div className="habitat-buttons">
-          <button className="upgrade-button" onClick={() => upgradeHabitat(habitat.id)}>Upgrade Habitat</button>
-            <button className="build-button" onClick={() => buildLegendaryHabitat(habitats, gold, setHabitats)}>Build Legendary Habitat</button>
+            <button className="upgrade-button" onClick={() => upgradeHabitat(habitat.id)}>Upgrade Habitat</button>
+            <button className="build-button" onClick={() => buildLegendaryHabitat(habitats, gold, setHabitats, setGold)}>Build Legendary Habitat</button>
           </div>
         </div>
       ))}

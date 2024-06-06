@@ -9,7 +9,7 @@ import '../src/css/Habitats.css';
 const maxCapacities = [400000, 600000, 800000, 1000000]; 
 
 function App() {
-  const [gold, setGold] = useState<number>(100);
+  const [gold, setGold] = useState<number>(100)
   const [habitats, setHabitats] = useState<Habitat[]>([
     { 
       id: 1, 
@@ -101,12 +101,11 @@ function App() {
     }
   };
   
-
   const collectGold = () => {
     console.log(gold);
     try {
       let totalGold = 0;
-      
+  
       setHabitats((prevHabitats) => {
         const newHabitats = prevHabitats.map((habitat) => {
           totalGold += habitat.gold;
@@ -114,13 +113,12 @@ function App() {
         });
         return newHabitats;
       });
-    
+  
       setGold((prevGold) => prevGold + totalGold);
     } catch (error) {
       console.error("Error collecting gold:", error);
     }
   };
-  
   
 
   const feedMonster = (monsterId: number) => {
@@ -207,32 +205,34 @@ function App() {
   const buildLegendaryHabitat = (
     habitats: Habitat[],
     gold: number,
-    setHabitats: React.Dispatch<React.SetStateAction<Habitat[]>>
+    setHabitats: React.Dispatch<React.SetStateAction<Habitat[]>>,
+    setGold: React.Dispatch<React.SetStateAction<number>>
   ) => {
     const buildCost = 2500000;
     if (gold >= buildCost) {
       const newGold = gold - buildCost;
-      gold = newGold;
       const newId = habitats.length + 1;
-      const newHabitatLevel = 0; 
-      const newHabitatMaxGold = maxCapacities[newHabitatLevel] || 0; 
+      const newHabitatLevel = 0;
+      const newHabitatMaxGold = maxCapacities[newHabitatLevel] || 0;
       const newHabitat: Habitat = {
         id: newId,
         name: `Legendary Habitat ${newId}`,
         gold: 0,
-        maxGold: newHabitatMaxGold, 
+        maxGold: newHabitatMaxGold,
         price: 0,
         maxMonsters: 3,
         sprites: [`/sprites/LegendaryHabitat_${newId}.png`],
         habitatMonsters: [],
-        level: newHabitatLevel, 
+        level: newHabitatLevel,
       };
   
+      setGold(newGold);
       setHabitats((prevHabitats) => [...prevHabitats, newHabitat]);
     } else {
       alert('Not enough gold to build a new habitat');
     }
   };
+
 
   
   return (
@@ -255,6 +255,7 @@ function App() {
         upgradeHabitat={upgradeHabitat}
         buildLegendaryHabitat={buildLegendaryHabitat}
         gold={gold}
+        setGold={setGold}
         setHabitats={setHabitats}
       />
       )}
