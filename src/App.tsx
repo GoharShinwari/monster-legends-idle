@@ -102,22 +102,19 @@ function App() {
   };
   
   const collectGold = () => {
-    console.log(gold);
-    try {
-      let totalGold = 0;
+    let totalCollectedGold = 0;
   
-      setHabitats((prevHabitats) => {
-        const newHabitats = prevHabitats.map((habitat) => {
-          totalGold += habitat.gold;
-          return { ...habitat, gold: 0 };
-        });
-        return newHabitats;
-      });
+    const updatedHabitats = habitats.map(habitat => {
+      const habitatGold = habitat.gold;
+      totalCollectedGold += habitatGold;
   
-      setGold((prevGold) => prevGold + totalGold);
-    } catch (error) {
-      console.error("Error collecting gold:", error);
-    }
+      // Resetting habitat gold after collection
+      return { ...habitat, gold: 0 };
+    });
+  
+    // Updating state with collected gold and resetting habitats' gold
+    setHabitats(updatedHabitats);
+    setGold(prevGold => prevGold + totalCollectedGold);
   };
   
 
