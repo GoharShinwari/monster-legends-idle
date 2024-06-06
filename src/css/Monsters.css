@@ -1,0 +1,81 @@
+.monsters-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.habitat-monsters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.monster-card {
+  width: 200px;
+  margin: 10px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+  background-color: #EEEBE8;
+  color: #333745;
+}
+
+.monster-name {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.monster-sprite {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 10px;
+}
+
+.monster-level,
+.monster-gold {
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.feed-button {
+  padding: 8px 20px;
+  background-color: #333745;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.feed-button:hover {
+  background-color: #1e2029;
+}
+
+.feeding-progress {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-bar {
+  width: 100%;
+  background-color: #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  height: 10px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #333745;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  margin-left: 10px;
+}
