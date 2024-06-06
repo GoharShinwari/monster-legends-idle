@@ -109,15 +109,12 @@ function App() {
         totalGold += habitat.gold;
         return { ...habitat, gold: 0 };
       });
-      console.log('New habitats after resetting gold:', newHabitats);
       return newHabitats;
     });
   
-    console.log('Total gold collected from habitats:', totalGold);
   
     setGold((prevGold) => {
       const newGold = prevGold + totalGold;
-      console.log('New total gold after collecting from habitats:', newGold);
       return newGold;
     });
   };
