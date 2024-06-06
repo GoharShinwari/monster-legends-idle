@@ -100,19 +100,16 @@ function App() {
       alert('All habitats are full!');
     }
   };
-  
+
   const collectGold = () => {
     let totalCollectedGold = 0;
   
     const updatedHabitats = habitats.map(habitat => {
       const habitatGold = habitat.gold;
       totalCollectedGold += habitatGold;
-  
-      // Resetting habitat gold after collection
-      return { ...habitat, gold: 0 };
+        return { ...habitat, gold: 0 };
     });
   
-    // Updating state with collected gold and resetting habitats' gold
     setHabitats(updatedHabitats);
     setGold(prevGold => prevGold + totalCollectedGold);
   };
