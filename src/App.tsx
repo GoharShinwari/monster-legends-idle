@@ -104,14 +104,24 @@ function App() {
 
   const collectGold = () => {
     let totalGold = 0;
-    setHabitats((prevHabitats) =>
-      prevHabitats.map((habitat) => {
+    setHabitats((prevHabitats) => {
+      const newHabitats = prevHabitats.map((habitat) => {
         totalGold += habitat.gold;
         return { ...habitat, gold: 0 };
-      })
-    );
-    setGold((prevGold) => prevGold + totalGold);
+      });
+      console.log('New habitats after resetting gold:', newHabitats);
+      return newHabitats;
+    });
+  
+    console.log('Total gold collected from habitats:', totalGold);
+  
+    setGold((prevGold) => {
+      const newGold = prevGold + totalGold;
+      console.log('New total gold after collecting from habitats:', newGold);
+      return newGold;
+    });
   };
+  
 
   const feedMonster = (monsterId: number) => {
     let alertShown = false; 
