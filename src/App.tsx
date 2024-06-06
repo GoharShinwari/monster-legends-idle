@@ -42,6 +42,8 @@ function App() {
     }
   ]);
 
+  //poop
+
   const [shop] = useState<ShopType>({
     monsters: [
       { id: 2, name: 'Vadamagma', level: 1, gold: 0, goldPerSecond: 6, price: 100, sprites: ['/sprites/vadamagma_egg.png', '/sprites/vadamagma_baby.png', '/sprites/vadamagma_teen.png', '/sprites/vadamagma_adult.png'], feedingProgress: 0 },
