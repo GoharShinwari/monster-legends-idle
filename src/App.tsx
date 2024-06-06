@@ -103,21 +103,23 @@ function App() {
   
 
   const collectGold = () => {
-    let totalGold = 0;
-    setHabitats((prevHabitats) => {
-      const newHabitats = prevHabitats.map((habitat) => {
-        totalGold += habitat.gold;
-        return { ...habitat, gold: 0 };
+    try {
+      let totalGold = 0;
+      
+      setHabitats((prevHabitats) => {
+        const newHabitats = prevHabitats.map((habitat) => {
+          totalGold += habitat.gold;
+          return { ...habitat, gold: 0 };
+        });
+        return newHabitats;
       });
-      return newHabitats;
-    });
-  
-  
-    setGold((prevGold) => {
-      const newGold = prevGold + totalGold;
-      return newGold;
-    });
+    
+      setGold((prevGold) => prevGold + totalGold);
+    } catch (error) {
+      console.error("Error collecting gold:", error);
+    }
   };
+  
   
 
   const feedMonster = (monsterId: number) => {
@@ -204,12 +206,12 @@ function App() {
   const buildLegendaryHabitat = (
     habitats: Habitat[],
     gold: number,
-    setGold: React.Dispatch<React.SetStateAction<number>>,
     setHabitats: React.Dispatch<React.SetStateAction<Habitat[]>>
   ) => {
     const buildCost = 2500000;
     if (gold >= buildCost) {
-      setGold((prevGold) => prevGold - buildCost);
+      const newGold = gold - buildCost;
+      gold = newGold;
       const newId = habitats.length + 1;
       const newHabitatLevel = 0; 
       const newHabitatMaxGold = maxCapacities[newHabitatLevel] || 0; 
@@ -220,17 +222,18 @@ function App() {
         maxGold: newHabitatMaxGold, 
         price: 0,
         maxMonsters: 3,
-        sprites: [`/sprites/LegendaryHabitat_1.png`],
+        sprites: [`/sprites/LegendaryHabitat_${newId}.png`],
         habitatMonsters: [],
         level: newHabitatLevel, 
       };
+  
       setHabitats((prevHabitats) => [...prevHabitats, newHabitat]);
     } else {
       alert('Not enough gold to build a new habitat');
     }
   };
-  
 
+  
   return (
     <div className="App">
       <h1>Monster Legends Idle RPG</h1>
@@ -251,7 +254,6 @@ function App() {
         upgradeHabitat={upgradeHabitat}
         buildLegendaryHabitat={buildLegendaryHabitat}
         gold={gold}
-        setGold={setGold}
         setHabitats={setHabitats}
       />
       )}
