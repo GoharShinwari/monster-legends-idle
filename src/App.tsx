@@ -2,15 +2,52 @@ import React, { useState, useEffect } from 'react';
 import Monsters from './components/Monsters';
 import Habitats from './components/Habitats';
 import ShopModal from './components/ShopModal';
+import LoginForm from './components/LoginForm';
+import SignUpForm from './components/SignUpForm';
+import LandingPage from './components/LandingPage';
+import { useShopData } from './shopData';
 import { Habitat, Monster, Shop as ShopType } from './types';
 import '../src/css/App.css';
 import '../src/css/Monsters.css';
 import '../src/css/Habitats.css';
-const maxCapacities = [400000, 600000, 800000, 1000000]; 
+
+import { initializeApp, FirebaseApp } from 'firebase/app';
+import 'firebase/auth';
+
+
+const maxCapacities = [400000, 600000, 800000, 1000000];  
+
+const firebaseConfig = {
+  apiKey: "AIzaSyArTNCPAE60UHbrHxuCeI3dJwQHxGxRbE4",
+  authDomain: "monster-legends-idle.firebaseapp.com",
+  projectId: "monster-legends-idle",
+  storageBucket: "monster-legends-idle.appspot.com",
+  messagingSenderId: "1024077220424",
+  appId: "1:1024077220424:web:8c6c69e987845b39f6267d",
+  measurementId: "G-KLRQ576D6L"
+}; 
 
 function App() {
-  const [gold, setGold] = useState<number>(100)
+  const [firebaseInitialized, setFirebaseInitialized] = useState(false);
+
+  useEffect(() => {
+    const app: FirebaseApp = initializeApp(firebaseConfig);
+    setFirebaseInitialized(true);
+    return () => {
+    };
+  }, []);
+
+  const handleLoginSuccess = () => {
+    setShowForms(false);
+  };
+
+
+  const [showForms, setShowForms] = useState<boolean>(true);
+  const [gold, setGold] = useState<number>(100);
+  const gems = 0;
+  const shop = useShopData();
   const [habitats, setHabitats] = useState<Habitat[]>([
+  
     { 
       id: 1, 
       name: 'Legendary Habitat', 
@@ -27,6 +64,7 @@ function App() {
     { 
       id: 1, 
       name: 'Nemestrinus', 
+      category: 'category',
       level: 1, 
       gold: 0, 
       goldPerSecond: 6, 
@@ -41,21 +79,7 @@ function App() {
       habitatId: 1 
     }
   ]);
-
-  //poop
-
-  const [shop] = useState<ShopType>({
-    monsters: [
-      { id: 2, name: 'Vadamagma', level: 1, gold: 0, goldPerSecond: 6, price: 100, sprites: ['/sprites/vadamagma_egg.png', '/sprites/vadamagma_baby.png', '/sprites/vadamagma_teen.png', '/sprites/vadamagma_adult.png'], feedingProgress: 0 },
-      { id: 3, name: 'Rockantium', level: 1, gold: 0, goldPerSecond: 6, price: 200, sprites: ['/sprites/rockantium_egg.png', '/sprites/rockantium_baby.png', '/sprites/rockantium_teen.png', '/sprites/rockantium_adult.png'], feedingProgress: 0 },
-      { id: 4, name: 'Thorder', level: 1, gold: 0, goldPerSecond: 6, price: 300, sprites: ['/sprites/thorder_egg.png', '/sprites/thorder_baby.png', '/sprites/thorder_teen.png', '/sprites/thorder_adult.png'], feedingProgress: 0 },
-      { id: 6, name: 'Lord Of Atlantis', level: 1, gold: 0, goldPerSecond: 6, price: 500, sprites: ['/sprites/lord_of_atlantis_egg.png', '/sprites/lord_of_atlantis_baby.png', '/sprites/lord_of_atlantis_teen.png', '/sprites/lord_of_atlantis_adult.png'], feedingProgress: 0 },
-      { id: 7, name: 'Darkzgul', level: 1, gold: 0, goldPerSecond: 6, price: 600, sprites: ['/sprites/darkzgul_egg.png', '/sprites/darkzgul_baby.png', '/sprites/darkzgul_teen.png', '/sprites/darkzgul_adult.png'], feedingProgress: 0 },
-      { id: 8, name: 'Goldfield', level: 1, gold: 0, goldPerSecond: 6, price: 700, sprites: ['/sprites/goldfield_egg.png', '/sprites/goldfield_baby.png', '/sprites/goldfield_teen.png', '/sprites/goldfield_adult.png'], feedingProgress: 0 },
-      { id: 9, name: 'Arch Knight', level: 1, gold: 0, goldPerSecond: 6, price: 800, sprites: ['/sprites/arch_knight_egg.png', '/sprites/arch_knight_baby.png', '/sprites/arch_knight_teen.png', '/sprites/arch_knight_adult.png'], feedingProgress: 0 },
-    ],
-    habitats: [],
-  });
+  
   const [currentTab, setCurrentTab] = useState<'Monsters' | 'Habitats'>('Monsters');
   const [showShop, setShowShop] = useState<boolean>(false);
 
@@ -227,41 +251,52 @@ function App() {
     }
   };
 
-
-  
   return (
     <div className="App">
-      <h1>Monster Legends Idle RPG</h1>
-      <div className="resources">
-        <p>Gold: {gold}</p>
-        <button onClick={collectGold}>Collect Gold</button>
-        <button onClick={() => setShowShop(true)}>Shop</button>
-      </div>
-      <div className="tabs">
-        <button onClick={() => setCurrentTab('Monsters')}>Monsters</button>
-        <button onClick={() => setCurrentTab('Habitats')}>Habitats</button>
-      </div>
-      {currentTab === 'Monsters' ? (
-        <Monsters monsters={monsters} feedMonster={feedMonster} />
+      {showForms ? (
+        <>
+          <LandingPage />
+          <SignUpForm />
+          <LoginForm onSuccess={handleLoginSuccess} />
+        </>
       ) : (
-      <Habitats
-        habitats={habitats}
-        upgradeHabitat={upgradeHabitat}
-        buildLegendaryHabitat={buildLegendaryHabitat}
-        gold={gold}
-        setGold={setGold}
-        setHabitats={setHabitats}
-      />
+        <>
+          <h1>Monster Legends Idle RPG</h1>
+          <div className="resources">
+            <p>Gold: {gold}</p>
+            <p>Gems: {gems}</p>
+            <div>
+              <button onClick={collectGold}>Collect Gold</button>
+              <button onClick={() => setShowShop(true)}>Shop</button>
+            </div>
+          </div>
+          <div className="tabs">
+            <button onClick={() => setCurrentTab('Monsters')}>Monsters</button>
+            <button onClick={() => setCurrentTab('Habitats')}>Habitats</button>
+          </div>
+          {currentTab === 'Monsters' ? (
+            <Monsters monsters={monsters} feedMonster={feedMonster} />
+          ) : (
+            <Habitats
+              habitats={habitats}
+              upgradeHabitat={upgradeHabitat}
+              buildLegendaryHabitat={buildLegendaryHabitat}
+              gold={gold}
+              setGold={setGold}
+              setHabitats={setHabitats}
+            />
+          )}
+          <ShopModal
+            show={showShop}
+            setShow={setShowShop}
+            monsters={shop.monsters}
+            gold={gold}
+            buyMonster={buyMonster}
+            capacity={getTotalMonsters()}
+            size={monsters.length}
+          />
+        </>
       )}
-      <ShopModal
-        show={showShop}
-        setShow={setShowShop}
-        monsters={shop.monsters}
-        buyMonster={buyMonster}
-        gold={gold}
-        capacity={getTotalMonsters()}
-        size={monsters.length}
-      />
     </div>
   );
 }
