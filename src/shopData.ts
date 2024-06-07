@@ -4,16 +4,16 @@ import { Shop } from './types'; // Adjust the path as needed
 export const useShopData = () => {
   const [shopData] = useState<Shop>({
     monsters: [
-      { id: 2, name: 'Vadamagma', category: 'Common', level: 1, gold: 0, goldPerSecond: 6, price: 100, sprites: ['/sprites/vadamagma_egg.png', '/sprites/vadamagma_baby.png', '/sprites/vadamagma_teen.png', '/sprites/vadamagma_adult.png'], feedingProgress: 0 },
-      { id: 3, name: 'Rockantium', category: 'Common', level: 1, gold: 0, goldPerSecond: 6, price: 200, sprites: ['/sprites/rockantium_egg.png', '/sprites/rockantium_baby.png', '/sprites/rockantium_teen.png', '/sprites/rockantium_adult.png'], feedingProgress: 0 },
-      { id: 4, name: 'Thorder', category: 'Common', level: 1, gold: 0, goldPerSecond: 6, price: 300, sprites: ['/sprites/thorder_egg.png', '/sprites/thorder_baby.png', '/sprites/thorder_teen.png', '/sprites/thorder_adult.png'], feedingProgress: 0 },
-      { id: 6, name: 'Lord Of Atlantis', category: 'Common', level: 1, gold: 0, goldPerSecond: 6, price: 500, sprites: ['/sprites/lord_of_atlantis_egg.png', '/sprites/lord_of_atlantis_baby.png', '/sprites/lord_of_atlantis_teen.png', '/sprites/lord_of_atlantis_adult.png'], feedingProgress: 0 },
-      { id: 7, name: 'Darkzgul', category: 'Common', level: 1, gold: 0, goldPerSecond: 6, price: 600, sprites: ['/sprites/darkzgul_egg.png', '/sprites/darkzgul_baby.png', '/sprites/darkzgul_teen.png', '/sprites/darkzgul_adult.png'], feedingProgress: 0 },
-      { id: 8, name: 'Goldfield', category: 'Common', level: 1, gold: 0, goldPerSecond: 6, price: 700, sprites: ['/sprites/goldfield_egg.png', '/sprites/goldfield_baby.png', '/sprites/goldfield_teen.png', '/sprites/goldfield_adult.png'], feedingProgress: 0 },
-      { id: 9, name: 'Arch Knight', category: 'Common', level: 1, gold: 0, goldPerSecond: 6, price: 800, sprites: ['/sprites/arch_knight_egg.png', '/sprites/arch_knight_baby.png', '/sprites/arch_knight_teen.png', '/sprites/arch_knight_adult.png'], feedingProgress: 0 },
+      { id: 2, name: 'Vadamagma', category: 'starterMonsters', level: 1, gold: 0, goldPerSecond: 6, price: 100, sprites: ['/sprites/vadamagma_egg.png', '/sprites/vadamagma_baby.png', '/sprites/vadamagma_teen.png', '/sprites/vadamagma_adult.png'], feedingProgress: 0 },
+      { id: 3, name: 'Rockantium', category: 'starterMonsters', level: 1, gold: 0, goldPerSecond: 6, price: 200, sprites: ['/sprites/rockantium_egg.png', '/sprites/rockantium_baby.png', '/sprites/rockantium_teen.png', '/sprites/rockantium_adult.png'], feedingProgress: 0 },
+      { id: 4, name: 'Thorder', category: 'starterMonsters', level: 1, gold: 0, goldPerSecond: 6, price: 300, sprites: ['/sprites/thorder_egg.png', '/sprites/thorder_baby.png', '/sprites/thorder_teen.png', '/sprites/thorder_adult.png'], feedingProgress: 0 },
+      { id: 6, name: 'Lord Of Atlantis', category: 'starterMonsters', level: 1, gold: 0, goldPerSecond: 6, price: 500, sprites: ['/sprites/lord_of_atlantis_egg.png', '/sprites/lord_of_atlantis_baby.png', '/sprites/lord_of_atlantis_teen.png', '/sprites/lord_of_atlantis_adult.png'], feedingProgress: 0 },
+      { id: 7, name: 'Darkzgul', category: 'starterMonsters', level: 1, gold: 0, goldPerSecond: 6, price: 600, sprites: ['/sprites/darkzgul_egg.png', '/sprites/darkzgul_baby.png', '/sprites/darkzgul_teen.png', '/sprites/darkzgul_adult.png'], feedingProgress: 0 },
+      { id: 8, name: 'Goldfield', category: 'starterMonsters', level: 1, gold: 0, goldPerSecond: 6, price: 700, sprites: ['/sprites/goldfield_egg.png', '/sprites/goldfield_baby.png', '/sprites/goldfield_teen.png', '/sprites/goldfield_adult.png'], feedingProgress: 0 },
+      { id: 9, name: 'Arch Knight', category: 'starterMonsters', level: 1, gold: 0, goldPerSecond: 6, price: 800, sprites: ['/sprites/arch_knight_egg.png', '/sprites/arch_knight_baby.png', '/sprites/arch_knight_teen.png', '/sprites/arch_knight_adult.png'], feedingProgress: 0 },
     ],
     habitats: [], 
-    rouletteMonsters: [ 
+    RouletteMonsters: [ 
       { id: 10, name: 'White Walker', category: 'Common', level: 1, gold: 0, goldPerSecond: 9, hasBought: false, sprites: ['/sprites/white_walker_egg.png', '/sprites/white_walker_baby.png', '/sprites/white_walker_teen.png', '/sprites/white_walker_adult.png'], feedingProgress: 0 },
       { id: 11, name: 'Nebotus', category: 'Common', level: 1, gold: 0, goldPerSecond: 9, hasBought: false, sprites: ['/sprites/nebotus_egg.png', '/sprites/nebotus_baby.png', '/sprites/nebotus_teen.png', '/sprites/nebotus_adult.png'], feedingProgress: 0 },
       { id: 12, name: 'Worker Hulk', category: 'Common', level: 1, gold: 0, goldPerSecond: 9, hasBought: false, sprites: ['/sprites/worker_hulk_egg.png', '/sprites/worker_hulk_baby.png', '/sprites/worker_hulk_teen.png', '/sprites/worker_hulk_adult.png'], feedingProgress: 0 },

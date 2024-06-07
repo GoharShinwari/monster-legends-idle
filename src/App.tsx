@@ -6,7 +6,7 @@ import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import LandingPage from './components/LandingPage';
 import { useShopData } from './shopData';
-import { Habitat, Monster, Shop as ShopType } from './types';
+import { Habitat, starterMonsters, Shop as ShopType } from './types';
 import '../src/css/App.css';
 import '../src/css/Monsters.css';
 import '../src/css/Habitats.css';
@@ -60,7 +60,7 @@ function App() {
       level: 0, 
     },
   ]);
-  const [monsters, setMonsters] = useState<Monster[]>([
+  const [monsters, setMonsters] = useState<starterMonsters[]>([
     { 
       id: 1, 
       name: 'Nemestrinus', 
@@ -108,7 +108,7 @@ function App() {
     );
   };
   
-  const buyMonster = (monster: Monster) => {
+  const buyMonster = (monster: starterMonsters) => {
     let added = false;
     
     habitats.some((habitat) => {
@@ -169,7 +169,7 @@ function App() {
   };
   
 
-  const calculateFeedingCost = (monster: Monster): number => {
+  const calculateFeedingCost = (monster: starterMonsters): number => {
     let feedingCost = 10;
   
     feedingCost += monster.level * 5;

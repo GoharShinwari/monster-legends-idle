@@ -1,4 +1,4 @@
-export interface Monster {
+export interface starterMonsters {
   id: number;
   name: string;
   level: number;
@@ -11,7 +11,7 @@ export interface Monster {
   habitatId?: number; 
 }
 
-export interface RouletteMonster {
+export interface RouletteMonsters {
   id: number;
   name: string;
   level: number;
@@ -37,7 +37,7 @@ export interface Habitat {
 }
 
 export interface Shop {
-  monsters: Monster[];
+  monsters: starterMonsters[];
   habitats: Habitat[];
-  rouletteMonsters: RouletteMonster[];
+  RouletteMonsters: RouletteMonsters[];
 }

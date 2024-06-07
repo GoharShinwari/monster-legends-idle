@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import '../css/ShopModal.css';
-import { Monster } from '../types';
+import { starterMonsters } from '../types';
 
 interface Props {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
-  monsters: Monster[];
-  buyMonster: (monster: Monster) => void;
+  monsters: starterMonsters[];
+  buyMonster: (monster: starterMonsters) => void;
   gold: number;
   capacity: number; 
   size: number;
 }
 
 function ShopModal({ show, setShow, monsters, buyMonster, gold, capacity, size }: Props) {
-  const [filteredMonsters, setFilteredMonsters] = useState<Monster[]>([]);
-  const [category, setCategory] = useState<string>('Common');
+  const [filteredMonsters, setFilteredMonsters] = useState<starterMonsters[]>([]);
+  const [category, setCategory] = useState<string>('starterMonsters');
 
   useEffect(() => {
     filterMonsters(category);
@@ -25,7 +25,7 @@ function ShopModal({ show, setShow, monsters, buyMonster, gold, capacity, size }
     setFilteredMonsters(filtered);
   };
 
-  const handleBuy = (monster: Monster) => {
+  const handleBuy = (monster: starterMonsters) => {
     const enoughMoney = gold >= monster.price;
     const enoughSpace = size < capacity;
 
@@ -54,14 +54,14 @@ function ShopModal({ show, setShow, monsters, buyMonster, gold, capacity, size }
           <h2>Shop</h2>
           <div className="category-buttons">
             <button onClick={() => setCategory('Event')}>Event</button>
-            <button onClick={() => setCategory('Common')}>Common</button>
+            <button onClick={() => setCategory('starterMonsters')}>Starter</button>
+              <button onClick={() => setCategory('Common')}>Common</button>
             <button onClick={() => setCategory('Rare')}>Rare</button>
             <button onClick={() => setCategory('Epic')}>Epic</button>
             <button onClick={() => setCategory('Legendary')}>Legendary</button>
             <button onClick={() => setCategory('VIP')}>VIP</button>
             <button onClick={() => setCategory('Nemesis')}>Nemesis</button>
             <button onClick={() => setCategory('War')}>War</button>
-            <button onClick={() => setCategory('Roulette')}>Roulette</button>
           </div>
           <div className="monsters-list">
             {filteredMonsters.map((monster) => (
