@@ -20,8 +20,8 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
   const [gold, setGold] = useState<number>(100);
   const [gems, setGems] = useState<number>(0);
-  const [monsters, setMonsters] = useState<Monster[]>([]);
-  const [habitats, setHabitats] = useState<Habitat[]>([]);
+  const [monsters, setMonsters] = useState<Monster[]>([{ id: 1, name: 'Nemestrinus', category: 'category', level: 1, gold: 0, goldPerSecond: 6, price: 0, sprites: ['/sprites/nemestrinus_egg.png', '/sprites/nemestrinus_baby.png', '/sprites/nemestrinus_teen.png', '/sprites/nemestrinus_adult.png'], feedingProgress: 0, habitatId: 1 }]);
+  const [habitats, setHabitats] = useState<Habitat[]>([{ id: 1, name: 'Legendary Habitat', gold: 0, maxGold: 400000, price: 0, maxMonsters: 3, sprites: ['/sprites/LegendaryHabitat_1.png'], habitatMonsters: [], level: 0 }]);
   const [showForms, setShowForms] = useState<boolean>(true);
   const [currentTab, setCurrentTab] = useState<'Monsters' | 'Habitats'>('Monsters');
   const [showShop, setShowShop] = useState<boolean>(false);
