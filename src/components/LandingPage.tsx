@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 
 const LandingPage: React.FC = () => {
-  const [isLogin, setIsLogin] = useState(true);
 
-  const toggleForm = () => {
-    setIsLogin(!isLogin);
-  };
+
 
   return (
     <div className="landing-page">

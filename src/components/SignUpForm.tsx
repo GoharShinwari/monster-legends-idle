@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from 'react';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const SignUpForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [, setErrorMessage] = useState<string>('');
 
   const handleSignUp = (e: { preventDefault: () => void; }) => {
     e.preventDefault();

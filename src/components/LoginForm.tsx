@@ -8,7 +8,7 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [, setErrorMessage] = useState<string>('');
 
   const handleLogin = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -20,7 +20,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
         onSuccess();
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
         console.error('Login error:', errorMessage);
         setErrorMessage(errorMessage);

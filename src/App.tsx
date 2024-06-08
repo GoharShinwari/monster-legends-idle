@@ -6,15 +6,15 @@ import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import LandingPage from './components/LandingPage';
 import { useShopData } from './shopData';
-import { Habitat, Monster, Shop } from './types';
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { Habitat, Monster } from './types';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 import firebaseApp from '../firebase'; // Import the initialized Firebase app
 
 const maxCapacities = [400000, 600000, 800000, 1000000];  
 
 function App() {
-  const [firebaseInitialized, setFirebaseInitialized] = useState(false);
+  const [, setFirebaseInitialized] = useState(false);
   const [user, setUser] = useState<any>(null); // Use 'any' temporarily, you should replace it with the correct user type
   const [gold, setGold] = useState<number>(100);
   const [gems, setGems] = useState<number>(0);

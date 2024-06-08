@@ -1,4 +1,3 @@
-import React from 'react';
 import '../css/Roulette.css';
 
 const Roulette = () => {
