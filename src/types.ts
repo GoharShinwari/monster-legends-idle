@@ -1,28 +1,17 @@
-export interface starterMonsters {
+export interface Monster {
   id: number;
   name: string;
   level: number;
   category: string;
   gold: number;
   goldPerSecond: number;
-  price: number;
+  price?: number;
+  hasBought?: boolean;
   sprites: string[];
   feedingProgress: number;
-  habitatId?: number; 
+  habitatId?: number;
 }
 
-export interface RouletteMonsters {
-  id: number;
-  name: string;
-  level: number;
-  category: string;
-  gold: number;
-  goldPerSecond: number;
-  hasBought: boolean;
-  sprites: string[];
-  feedingProgress: number;
-  habitatId?: number; 
-}
 
 export interface Habitat {
   habitatMonsters: any[];
@@ -37,7 +26,6 @@ export interface Habitat {
 }
 
 export interface Shop {
-  monsters: starterMonsters[];
+  monsters: Monster[];
   habitats: Habitat[];
-  RouletteMonsters: RouletteMonsters[];
 }

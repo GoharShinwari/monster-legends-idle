@@ -6,48 +6,90 @@ import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import LandingPage from './components/LandingPage';
 import { useShopData } from './shopData';
-import { Habitat, starterMonsters, Shop as ShopType } from './types';
-import '../src/css/App.css';
-import '../src/css/Monsters.css';
-import '../src/css/Habitats.css';
-
+import { Habitat, Monster, Shop } from './types'; // Assuming the correct types are Habitat, Monster, and Shop
 import { initializeApp, FirebaseApp } from 'firebase/app';
-import 'firebase/auth';
-
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 
 const maxCapacities = [400000, 600000, 800000, 1000000];  
 
 const firebaseConfig = {
-  apiKey: "AIzaSyArTNCPAE60UHbrHxuCeI3dJwQHxGxRbE4",
-  authDomain: "monster-legends-idle.firebaseapp.com",
-  projectId: "monster-legends-idle",
-  storageBucket: "monster-legends-idle.appspot.com",
-  messagingSenderId: "1024077220424",
-  appId: "1:1024077220424:web:8c6c69e987845b39f6267d",
-  measurementId: "G-KLRQ576D6L"
+  apiKey: "your_api_key",
+  authDomain: "your_auth_domain",
+  projectId: "your_project_id",
+  storageBucket: "your_storage_bucket",
+  messagingSenderId: "your_messaging_sender_id",
+  appId: "your_app_id",
+  measurementId: "your_measurement_id"
 }; 
 
 function App() {
   const [firebaseInitialized, setFirebaseInitialized] = useState(false);
+  const [user, setUser] = useState<any>(null); // Use 'any' temporarily, you should replace it with the correct user type
+  const [gold, setGold] = useState<number>(100);
+  const [gems, setGems] = useState<number>(0);
+
+  const auth = getAuth();
+  const db = getFirestore();
 
   useEffect(() => {
     const app: FirebaseApp = initializeApp(firebaseConfig);
     setFirebaseInitialized(true);
     return () => {
+      // Cleanup function if needed
     };
   }, []);
 
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+        loadGameData(user.uid);
+      } else {
+        setUser(null);
+      }
+    });
+  }, [auth]);
+
   const handleLoginSuccess = () => {
     setShowForms(false);
+    saveGameData();
   };
 
+  const loadGameData = async (userId: string) => {
+    try {
+      const userDoc = await getDoc(doc(db, 'users', userId));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        setGold(data.gold || 100);
+        setGems(data.gems || 0);
+        setHabitats(data.habitats || []);
+        setMonsters(data.monsters || []);
+      }
+    } catch (error) {
+      console.error('Error loading game data:', error);
+    }
+  };
+  
+  const saveGameData = async () => {
+    try {
+      if (user) {
+        const userData = {
+          gold,
+          gems,
+          habitats,
+          monsters,
+        };
+        await setDoc(doc(db, 'users', user.uid), userData);
+      }
+    } catch (error) {
+      console.error('Error saving game data:', error);
+    }
+  };
 
   const [showForms, setShowForms] = useState<boolean>(true);
-  const [gold, setGold] = useState<number>(100);
-  const gems = 0;
   const shop = useShopData();
   const [habitats, setHabitats] = useState<Habitat[]>([
-  
     { 
       id: 1, 
       name: 'Legendary Habitat', 
@@ -60,7 +102,7 @@ function App() {
       level: 0, 
     },
   ]);
-  const [monsters, setMonsters] = useState<starterMonsters[]>([
+  const [monsters, setMonsters] = useState<Monster[]>([ // Assuming Monster is the correct type
     { 
       id: 1, 
       name: 'Nemestrinus', 
@@ -108,7 +150,7 @@ function App() {
     );
   };
   
-  const buyMonster = (monster: starterMonsters) => {
+  const buyMonster = (monster: Monster) => {
     let added = false;
     
     habitats.some((habitat) => {
@@ -169,7 +211,7 @@ function App() {
   };
   
 
-  const calculateFeedingCost = (monster: starterMonsters): number => {
+  const calculateFeedingCost = (monster: Monster): number => {
     let feedingCost = 10;
   
     feedingCost += monster.level * 5;
@@ -177,7 +219,7 @@ function App() {
     return feedingCost;
   };
   
-  const getTotalMonsters = () => {
+  const getTotalMonsters = (): number => {
     return habitats.reduce((acc, habitat) => acc + habitat.maxMonsters, 0);
   };
 

@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import '../css/ShopModal.css';
-import { starterMonsters } from '../types';
+import { Monster } from '../types';
 
 interface Props {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
-  monsters: starterMonsters[];
-  buyMonster: (monster: starterMonsters) => void;
+  monsters: Monster[];
+  buyMonster: (monster: Monster) => void;
   gold: number;
   capacity: number; 
   size: number;
 }
 
 function ShopModal({ show, setShow, monsters, buyMonster, gold, capacity, size }: Props) {
-  const [filteredMonsters, setFilteredMonsters] = useState<starterMonsters[]>([]);
+  const [filteredMonsters, setFilteredMonsters] = useState<Monster[]>([]);
   const [category, setCategory] = useState<string>('starterMonsters');
 
   useEffect(() => {
@@ -25,8 +25,8 @@ function ShopModal({ show, setShow, monsters, buyMonster, gold, capacity, size }
     setFilteredMonsters(filtered);
   };
 
-  const handleBuy = (monster: starterMonsters) => {
-    const enoughMoney = gold >= monster.price;
+  const handleBuy = (monster: Monster) => {
+    const enoughMoney = monster.price !== undefined && gold >= monster.price;
     const enoughSpace = size < capacity;
 
     if (!enoughMoney) {
@@ -58,7 +58,7 @@ function ShopModal({ show, setShow, monsters, buyMonster, gold, capacity, size }
               <button onClick={() => setCategory('Common')}>Common</button>
             <button onClick={() => setCategory('Rare')}>Rare</button>
             <button onClick={() => setCategory('Epic')}>Epic</button>
-            <button onClick={() => setCategory('Legendary')}>Legendary</button>
+            <button onClick={() => setCategory('legendary')}>Legendary</button>
             <button onClick={() => setCategory('VIP')}>VIP</button>
             <button onClick={() => setCategory('Nemesis')}>Nemesis</button>
             <button onClick={() => setCategory('War')}>War</button>
