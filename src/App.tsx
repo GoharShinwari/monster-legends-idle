@@ -6,9 +6,9 @@ import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import LandingPage from './components/LandingPage';
 import { useShopData } from './shopData';
-import { Habitat, Monster, Shop } from './types'; // Assuming the correct types are Habitat, Monster, and Shop
+import { Habitat, Monster } from './types'; // Assuming the correct types are Habitat, Monster, and Shop
 import { initializeApp, FirebaseApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 
 const maxCapacities = [400000, 600000, 800000, 1000000];  
