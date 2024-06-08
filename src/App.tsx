@@ -38,7 +38,7 @@ function App() {
     });
     return () => unsubscribe();
   }, []);
-
+  
   const loadGameData = async (userId: string) => {
     const userRef = ref(db, `users/${userId}`);
     onValue(userRef, (snapshot) => {
@@ -50,16 +50,8 @@ function App() {
         setMonsters(data.monsters || []);
       }
     });
-
-    const localGameData = localStorage.getItem('gameData');
-    if (localGameData) {
-      const { gold: localGold, monsters: localMonsters, habitats: localHabitats } = JSON.parse(localGameData);
-      if (localGold) setGold(localGold);
-      if (localMonsters) setMonsters(localMonsters);
-      if (localHabitats) setHabitats(localHabitats);
-    }
   };
-
+  
   const saveGameData = () => {
     if (user) {
       const userData = {
@@ -69,7 +61,6 @@ function App() {
         monsters,
       };
       set(ref(db, `users/${user.uid}`), userData);
-      localStorage.setItem('gameData', JSON.stringify(userData));
     }
   };
 
