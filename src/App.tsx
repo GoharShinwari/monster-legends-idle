@@ -6,22 +6,12 @@ import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import LandingPage from './components/LandingPage';
 import { useShopData } from './shopData';
-import { Habitat, Monster } from './types'; // Assuming the correct types are Habitat, Monster, and Shop
-import { initializeApp, FirebaseApp } from 'firebase/app';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { Habitat, Monster, Shop } from './types';
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
+import firebaseApp from '../firebase'; // Import the initialized Firebase app
 
 const maxCapacities = [400000, 600000, 800000, 1000000];  
-
-const firebaseConfig = {
-  apiKey: "your_api_key",
-  authDomain: "your_auth_domain",
-  projectId: "your_project_id",
-  storageBucket: "your_storage_bucket",
-  messagingSenderId: "your_messaging_sender_id",
-  appId: "your_app_id",
-  measurementId: "your_measurement_id"
-}; 
 
 function App() {
   const [firebaseInitialized, setFirebaseInitialized] = useState(false);
@@ -29,16 +19,15 @@ function App() {
   const [gold, setGold] = useState<number>(100);
   const [gems, setGems] = useState<number>(0);
 
-  const auth = getAuth();
-  const db = getFirestore();
+  // Initialize Firebase
+  const auth = getAuth(firebaseApp);
+  const db = getFirestore(firebaseApp);
 
   useEffect(() => {
-    const app: FirebaseApp = initializeApp(firebaseConfig);
+    // Check if Firebase is initialized
     setFirebaseInitialized(true);
-    return () => {
-      // Cleanup function if needed
-    };
   }, []);
+  
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
