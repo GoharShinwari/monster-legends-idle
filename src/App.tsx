@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Monsters from './components/Monsters';
 import Habitats from './components/Habitats';
 import ShopModal from './components/ShopModal';
@@ -7,30 +7,28 @@ import SignUpForm from './components/SignUpForm';
 import LandingPage from './components/LandingPage';
 import { useShopData } from './shopData';
 import { Habitat, Monster } from './types';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
-import firebaseApp from '../firebase'; // Import the initialized Firebase app
-
-const maxCapacities = [400000, 600000, 800000, 1000000];  
+import { auth, db } from '../firebase'; 
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { ref, onValue, set } from 'firebase/database';
+import './css/App.css';
+import './css/Habitats.css';
+import './css/Monsters.css';
+import './css/ShopModal.css';
+const maxCapacities = [400000, 600000, 800000, 1000000];
 
 function App() {
-  const [, setFirebaseInitialized] = useState(false);
-  const [user, setUser] = useState<any>(null); // Use 'any' temporarily, you should replace it with the correct user type
+  const [user, setUser] = useState<User | null>(null);
   const [gold, setGold] = useState<number>(100);
   const [gems, setGems] = useState<number>(0);
-
-  // Initialize Firebase
-  const auth = getAuth(firebaseApp);
-  const db = getFirestore(firebaseApp);
-
-  useEffect(() => {
-    // Check if Firebase is initialized
-    setFirebaseInitialized(true);
-  }, []);
-  
+  const [monsters, setMonsters] = useState<Monster[]>([{ id: 1, name: 'Nemestrinus', category: 'category', level: 1, gold: 0, goldPerSecond: 6, price: 0, sprites: ['/sprites/nemestrinus_egg.png', '/sprites/nemestrinus_baby.png', '/sprites/nemestrinus_teen.png', '/sprites/nemestrinus_adult.png'], feedingProgress: 0, habitatId: 1 }]);
+  const [habitats, setHabitats] = useState<Habitat[]>([{ id: 1, name: 'Legendary Habitat', gold: 0, maxGold: 400000, price: 0, maxMonsters: 3, sprites: ['/sprites/LegendaryHabitat_1.png'], habitatMonsters: [], level: 0 }]);
+  const [showForms, setShowForms] = useState<boolean>(true);
+  const [currentTab, setCurrentTab] = useState<'Monsters' | 'Habitats'>('Monsters');
+  const [showShop, setShowShop] = useState<boolean>(false);
+  const shop = useShopData();
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
         loadGameData(user.uid);
@@ -38,81 +36,42 @@ function App() {
         setUser(null);
       }
     });
-  }, [auth]);
-
-  const handleLoginSuccess = () => {
-    setShowForms(false);
-    saveGameData();
-  };
+    return () => unsubscribe();
+  }, []);
 
   const loadGameData = async (userId: string) => {
-    try {
-      const userDoc = await getDoc(doc(db, 'users', userId));
-      if (userDoc.exists()) {
-        const data = userDoc.data();
+    const userRef = ref(db, `users/${userId}`);
+    onValue(userRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
         setGold(data.gold || 100);
         setGems(data.gems || 0);
         setHabitats(data.habitats || []);
         setMonsters(data.monsters || []);
       }
-    } catch (error) {
-      console.error('Error loading game data:', error);
-    }
+    });
   };
-  
-  const saveGameData = async () => {
-    try {
-      if (user) {
-        const userData = {
-          gold,
-          gems,
-          habitats,
-          monsters,
-        };
-        await setDoc(doc(db, 'users', user.uid), userData);
-      }
-    } catch (error) {
-      console.error('Error saving game data:', error);
+
+  const saveGameData = () => {
+    if (user) {
+      const userData = {
+        gold,
+        gems,
+        habitats,
+        monsters,
+      };
+      set(ref(db, `users/${user.uid}`), userData);
     }
   };
 
-  const [showForms, setShowForms] = useState<boolean>(true);
-  const shop = useShopData();
-  const [habitats, setHabitats] = useState<Habitat[]>([
-    { 
-      id: 1, 
-      name: 'Legendary Habitat', 
-      gold: 0, 
-      maxGold: 400000, 
-      price: 0, 
-      maxMonsters: 3, 
-      sprites: ['/sprites/LegendaryHabitat_1.png'], 
-      habitatMonsters: [],
-      level: 0, 
-    },
-  ]);
-  const [monsters, setMonsters] = useState<Monster[]>([ // Assuming Monster is the correct type
-    { 
-      id: 1, 
-      name: 'Nemestrinus', 
-      category: 'category',
-      level: 1, 
-      gold: 0, 
-      goldPerSecond: 6, 
-      price: 0, 
-      sprites: [
-        '/sprites/nemestrinus_egg.png', 
-        '/sprites/nemestrinus_baby.png', 
-        '/sprites/nemestrinus_teen.png', 
-        '/sprites/nemestrinus_adult.png'
-      ], 
-      feedingProgress: 0, 
-      habitatId: 1 
-    }
-  ]);
-  
-  const [currentTab, setCurrentTab] = useState<'Monsters' | 'Habitats'>('Monsters');
-  const [showShop, setShowShop] = useState<boolean>(false);
+  useEffect(() => {
+    saveGameData();
+  }, [gold, gems, habitats, monsters]);
+
+  const handleLoginSuccess = () => {
+    setShowForms(false);
+    saveGameData();
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -138,10 +97,12 @@ function App() {
       })
     );
   };
-  
+
+
+
   const buyMonster = (monster: Monster) => {
     let added = false;
-    
+
     habitats.some((habitat) => {
       if (monsters.filter((m) => m.habitatId === habitat.id).length < habitat.maxMonsters) {
         setMonsters((prevMonsters) => [...prevMonsters, { ...monster, habitatId: habitat.id }]);
@@ -150,7 +111,7 @@ function App() {
       }
       return false; 
     });
-  
+
     if (!added) {
       alert('All habitats are full!');
     }
@@ -158,30 +119,29 @@ function App() {
 
   const collectGold = () => {
     let totalCollectedGold = 0;
-  
+
     const updatedHabitats = habitats.map(habitat => {
       const habitatGold = habitat.gold;
       totalCollectedGold += habitatGold;
-        return { ...habitat, gold: 0 };
+      return { ...habitat, gold: 0 };
     });
-  
+
     setHabitats(updatedHabitats);
     setGold(prevGold => prevGold + totalCollectedGold);
   };
-  
 
   const feedMonster = (monsterId: number) => {
     let alertShown = false; 
-    
+
     setMonsters((prevMonsters) => {
       return prevMonsters.map((monster) => {
         const feedingCost = calculateFeedingCost(monster);
-        
+
         if (gold >= feedingCost) {
           if (monster.id === monsterId) {
             const newFeedingProgress = monster.feedingProgress + 1;
             setGold((prevGold) => prevGold - feedingCost);
-            
+
             if (newFeedingProgress >= 4) {
               const newLevel = Math.min(monster.level + 1, 100);
               return { ...monster, level: newLevel, feedingProgress: 0 };
@@ -193,21 +153,18 @@ function App() {
           alert('Not enough gold!');
           alertShown = true; 
         }
-        
+
         return monster;
       });
     });
   };
-  
 
   const calculateFeedingCost = (monster: Monster): number => {
     let feedingCost = 10;
-  
     feedingCost += monster.level * 5;
-  
     return feedingCost;
   };
-  
+
   const getTotalMonsters = (): number => {
     return habitats.reduce((acc, habitat) => acc + habitat.maxMonsters, 0);
   };
@@ -215,21 +172,21 @@ function App() {
   const upgradeHabitat = (habitatId: number) => {
     const upgradeCosts = [10000000, 25000000, 75000000]; 
     const holdingSizes = [3, 6, 9, 12]; 
-  
+
     const upgradedHabitat = habitats.find((habitat) => habitat.id === habitatId);
-  
+
     if (!upgradedHabitat) {
       alert('Habitat not found');
       return;
     }
-  
+
     const currentLevel = upgradedHabitat.level || 0;
     const nextLevel = currentLevel + 1;
-  
+
     const nextUpgradeCost = upgradeCosts[currentLevel] || 0;
     const nextHoldingSize = holdingSizes[nextLevel] || holdingSizes[currentLevel];
     const nextMaxGold = maxCapacities[nextLevel] || maxCapacities[currentLevel];
-  
+
     if (gold >= nextUpgradeCost) {
       setGold((prevGold) => prevGold - nextUpgradeCost);
       setHabitats((prevHabitats) => {
@@ -249,14 +206,8 @@ function App() {
       alert('Not enough gold to upgrade the habitat');
     }
   };
-  
-  
-  const buildLegendaryHabitat = (
-    habitats: Habitat[],
-    gold: number,
-    setHabitats: React.Dispatch<React.SetStateAction<Habitat[]>>,
-    setGold: React.Dispatch<React.SetStateAction<number>>
-  ) => {
+
+  const buildLegendaryHabitat = () => {
     const buildCost = 2500000;
     if (gold >= buildCost) {
       const newGold = gold - buildCost;
@@ -274,7 +225,7 @@ function App() {
         habitatMonsters: [],
         level: newHabitatLevel,
       };
-  
+
       setGold(newGold);
       setHabitats((prevHabitats) => [...prevHabitats, newHabitat]);
     } else {
