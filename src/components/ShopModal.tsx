@@ -55,7 +55,7 @@ function ShopModal({ show, setShow, monsters, buyMonster, gold, capacity, size }
           <div className="category-buttons">
             <button onClick={() => setCategory('Event')}>Event</button>
             <button onClick={() => setCategory('starterMonsters')}>Starter</button>
-              <button onClick={() => setCategory('Common')}>Common</button>
+            <button onClick={() => setCategory('Common')}>Common</button>
             <button onClick={() => setCategory('Rare')}>Rare</button>
             <button onClick={() => setCategory('Epic')}>Epic</button>
             <button onClick={() => setCategory('legendary')}>Legendary</button>

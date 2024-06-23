@@ -19,7 +19,9 @@ const maxCapacities = [400000, 600000, 800000, 1000000];
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [gold, setGold] = useState<number>(100);
+  const [food, setFood] = useState<number>(0);
   const [gems, setGems] = useState<number>(0);
+  const [count, setCount] = useState(0);
   const [monsters, setMonsters] = useState<Monster[]>([{ id: 1, name: 'Nemestrinus', category: 'category', level: 1, gold: 0, goldPerSecond: 6, price: 0, sprites: ['/sprites/nemestrinus_egg.png', '/sprites/nemestrinus_baby.png', '/sprites/nemestrinus_teen.png', '/sprites/nemestrinus_adult.png'], feedingProgress: 0, habitatId: 1 }]);
   const [habitats, setHabitats] = useState<Habitat[]>([{ id: 1, name: 'Legendary Habitat', gold: 0, maxGold: 400000, price: 0, maxMonsters: 3, sprites: ['/sprites/LegendaryHabitat_1.png'], habitatMonsters: [], level: 0 }]);
   const [showForms, setShowForms] = useState<boolean>(true);
@@ -56,6 +58,7 @@ function App() {
     if (user) {
       const userData = {
         gold,
+        food,
         gems,
         habitats,
         monsters,
@@ -64,25 +67,28 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    saveGameData();
-  }, [gold, gems, habitats, monsters]);
-
-
   const handleLoginSuccess = () => {
     setShowForms(false);
     saveGameData();
   };
-
+  
   useEffect(() => {
-    const interval = setInterval(() => {
+    const goldInterval = setInterval(() => {
       generateGold();
     }, 1000);
 
-    return () => clearInterval(interval);
-  }, [habitats, monsters]);
+    if (count === 10) {
+      saveGameData();
+      setCount(0); 
+    }
+
+    return () => {
+      clearInterval(goldInterval);
+    };
+  }, [count]);
 
   const generateGold = () => {
+    setCount((prevCount) => prevCount + 1);
     setHabitats((prevHabitats) =>
       prevHabitats.map((habitat) => {
         const totalGold = monsters.reduce((acc, monster) => {
@@ -239,7 +245,7 @@ function App() {
       {showForms ? (
         <>
           <LandingPage />
-          <SignUpForm />
+          <SignUpForm onSuccess={handleLoginSuccess} />
           <LoginForm onSuccess={handleLoginSuccess} />
         </>
       ) : (
@@ -247,6 +253,7 @@ function App() {
           <h1>Monster Legends Idle RPG</h1>
           <div className="resources">
             <p>Gold: {gold}</p>
+            <p>Food: {food}</p>
             <p>Gems: {gems}</p>
             <div>
               <button onClick={collectGold}>Collect Gold</button>

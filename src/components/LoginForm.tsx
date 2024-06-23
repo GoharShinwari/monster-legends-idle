@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 interface LoginFormProps {
-  onSuccess: () => void;
+  onSuccess: (userId: string) => void; 
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
@@ -14,8 +14,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
     e.preventDefault();
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        onSuccess();
+      .then((userCredential) => {
+        const user = userCredential.user;
+        onSuccess(user.uid); 
       })
       .catch((error) => {
         setErrorMessage(error.message);
